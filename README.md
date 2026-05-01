@@ -813,13 +813,15 @@ operators of the relational algebra (σ, π, ρ, ×, −) without aggregation?
 What does this tell you about the relationship between relational algebra and
 SQL?
 
->
 ```bash
 SELECT member_no, copy_no, COUNT(*) AS times
 FROM   loan
 GROUP  BY member_no, copy_no
 HAVING COUNT(*) > 1;
 ```
+> You can't express this in basic relational algebra since there's no counting operator.
+> You'd need the extended version with grouping (γ). SQL goes beyond the five classical
+> operators by adding aggregation, window functions, and recursion.
 
 > **Screenshot 4:** Take a screenshot of your terminal showing the output of
 > the query from Task 4d (the join across four relations), and insert it here.
