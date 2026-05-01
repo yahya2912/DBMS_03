@@ -787,7 +787,7 @@ joins. SQL does not prescribe an execution order; the query optimizer may
 reorder these joins freely. Under what condition would reordering a join change
 the *result* of a query? Under what condition is it always safe?
 
-> *Your answer:*
+> Reordering joins is always safe for inner joins on foreign key equalities because the result doesn't change. It only matters when outer joins are involved, because swapping sides changes which rows get preserved.
 
 **Question B – NULL semantics:**  
 `return_date` is `NULL` for an open loan. `NULL` in SQL does not mean zero or
@@ -795,7 +795,7 @@ false – it means *unknown*. Consider the query `WHERE return_date = NULL`.
 Will it return the open loans? Explain why or why not and write the correct
 form.
 
-> *Your answer:*
+> **WHERE return_date = NULL** returns nothing. SQL treats NULL as unknown. You need **WHERE return_date IS NULL** instead.
 
 **Question C – Surrogate vs. natural key:**  
 `book` uses `isbn` as its natural primary key; all other entities use surrogate
@@ -803,7 +803,7 @@ integer keys. Suppose the library occasionally receives books without an ISBN
 (unpublished manuscripts, internal reports). How would this affect the `isbn`
 primary key? What design change would you make?
 
-> *Your answer:*
+> You can't insert a book without an ISBN because it's the primary key and can't be null. Fix: add a surrogate **book_id** as the real primary key, keep **isbn** as nullable and unique. Books without ISBNs just leave it empty.
 
 **Question D – Relational algebra limitations:**  
 Suppose the library wants to find all members who have borrowed the same copy
@@ -813,7 +813,13 @@ operators of the relational algebra (σ, π, ρ, ×, −) without aggregation?
 What does this tell you about the relationship between relational algebra and
 SQL?
 
-> *Your answer:*
+>
+```bash
+SELECT member_no, copy_no, COUNT(*) AS times
+FROM   loan
+GROUP  BY member_no, copy_no
+HAVING COUNT(*) > 1;
+```
 
 > **Screenshot 4:** Take a screenshot of your terminal showing the output of
 > the query from Task 4d (the join across four relations), and insert it here.
